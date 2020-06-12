@@ -1,0 +1,4 @@
+{
+  "presets": ["@babel/preset-env"]
+  // automatic conversion no matter the anbient
+}

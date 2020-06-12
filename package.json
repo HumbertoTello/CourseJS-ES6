@@ -1,0 +1,16 @@
+{
+  "name": "CourseJS-ES6",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/HumbertoTello/CourseJS-ES6",
+  "author": "Humberto Tello <betoelo2@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.10.1",
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2"
+  },
+  "scripts": {
+    "dev": "babel ./main.js -o ./bundle.js -w"
+  }
+}
