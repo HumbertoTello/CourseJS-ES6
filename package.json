@@ -5,13 +5,17 @@
   "repository": "https://github.com/HumbertoTello/CourseJS-ES6",
   "author": "Humberto Tello <betoelo2@gmail.com>",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.10.1",
-    "@babel/preset-env": "^7.10.2"
+    "@babel/preset-env": "^7.10.2",
+    "babel-loader": "^8.1.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "dev": "babel ./templateLiterals.js -o ./bundle.js -w"
+    "dev": "webpack-dev-server --mode=development"
   }
 }
