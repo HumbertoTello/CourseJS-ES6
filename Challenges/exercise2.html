@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 2º exercício - https://skylab.rocketseat.com.br/api/files/1566499229316.pdf
+    const users = [
+      { name: 'Diego', age: 23, job: 'Rocketseat' },
+      { name: 'Gabriel', age: 15, job: 'Rocketseat' },
+      { name: 'Lucas', age: 30, job: 'Facebook' },
+    ];
+
+    const age = users.map(function(item) {
+      return item.age;
+    });
+    
+    const enterprise = users.filter((item) => 
+      item.job == 'Rocketseat'
+      &&
+      item.age > 18
+    );
+
+    const google = users.find((item) => item.job == 'Facebook');
+    
+    const operation = users
+      .map(function(item) {
+        return {
+          name: item.name,
+          age: item.age*2,
+          job: item.job
+        }
+      })
+      .filter((item) => item.age <= 50);
+
+    console.log(operation);
+
+  </script>
+</body>
+</html>
