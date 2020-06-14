@@ -1,101 +1,93 @@
-// Transforme os seguintes trechos de código utilizando async/await:
 
-// Funão delay aciona o.then após 1s
-// const delay = () => new Promise(resolve => setTimeout(resolve, 1000));
-// function umPorSegundo() {
-//   delay().then(() => {
-//     console.log('1s');
-//     delay().then(() => {
-//       console.log('2s');
-//       delay().then(() => {
-//         console.log('3s');
-//       });
-//     })
-//   });
-// }
-// umPorSegundo();
-import axios from 'axios';
+import api from './api';
 
-const delay = (s) => new Promise(resolve => setTimeout(resolve(`${s}s`), 1000));
-async function umPorSegundo() {
-  console.log(await delay(1));
-  console.log(await delay(2));
-  console.log(await delay(3));
-}
-umPorSegundo();
+class App {
+  constructor() {
+    this.repositories = [];
 
-// import axios from 'axios';
-// function getUserFromGithub(user) {
-//   axios.get(`https://api.github.com/users/${user}`)
-//     .then(response => {
-//       console.log(response.data);
-//     })
-//     .catch(err => {
-//       console.log('Usuário não existe');
-//     })
-// }
-// getUserFromGithub('diego3g');
-// getUserFromGithub('diego3g124123');
+    this.formEl = document.getElementById('repo-form');
+    this.inputEl = document.querySelector('input[name=repository]');
+    this.listEl = document.getElementById('repo-list');
 
-
-async function getUserFromGithub(username) {
-  try {
-    const response = await axios.get(`https://api.github.com/users/${username}`)
-    console.log(response);
-  } catch (err) {
-    console.warn('Usuário não existe')
+    this.registerHandlers();
   }
-}
 
+  // register the events (is a listener)
+  registerHandlers() {
+    this.formEl.onsubmit = event => this.addRepository(event);
+  }
 
-getUserFromGithub('diego3g');
-getUserFromGithub('diego3g124123');
+  setLoading(loading = true) {
+    if(loading === true) {
+      let loadingEl = document.createElement('span');
+      loadingEl.appendChild(document.createTextNode('Carregando'));
+      loadingEl.setAttribute('id', 'loading');
 
-// class Github {
-//   static getRepositories(repo) {
-//     axios.get(`https://api.github.com/repos/${repo}`)
-//       .then(response => {
-//         console.log(response.data);
-//       })
-//       .catch(err => {
-//         console.log('Repositório não existe');
-//       })
-//   }
-// }
-// Github.getRepositories('rocketseat/rocketseat.com.br');
-// Github.getRepositories('rocketseat/dslkvmskv');
-
-class Github {
-  static async getRepositories(repo) {
-    try {
-      const response = await axios.get(`https://api.github.com/repos/${repo}`)
-      console.log(response);
-    } catch (err) {
-      console.log('Repositório não existe')
+      this.formEl.appendChild(loadingEl);
+    } else {
+      document.getElementById('loading').remove();
     }
   }
-}
 
-Github.getRepositories('rocketseat/rocketseat.com.br');
-Github.getRepositories('rocketseat/dslkvmskv');
+  async addRepository() {
+    // não vai recarregar a página
+    event.preventDefault();
 
-// const buscaUsuario = usuario => {
-//   axios.get(`https://api.github.com/users/${user}`)
-//     .then(response => {
-//       console.log(response.data);
-//     })
-//     .catch(err => {
-//       console.log('Usuário não existe');
-//     });
-// }
-// buscaUsuario('diego3g');
+    const repoInput = this.inputEl.value;
 
-const buscaUsuario = usuario => {
-  try {
-    const response = axios.get(`https://api.github.com/users/${user}`)
-    console.log(response.data);
-  } catch (err) {
-    console.log('Usuário não existe')
+    if(repoInput.length === 0)
+      return;
+
+    this.setLoading()
+
+    try {
+      const response = await api.get(`/repos/${repoInput}`);
+  
+      const { name, description, html_url, owner: {avatar_url}} = response.data
+  
+      this.repositories.push({
+        name,
+        description,
+        avatar_url,
+        html_url 
+      });
+  
+      this.inputEl.value = '';
+      this.render();
+    } catch (err) {
+      alert('O repositório não existe');
+    };
+
+    this.setLoading(false);
+  }
+
+  render() {
+    this.listEl.innerHTML = ''; // erase de list
+    this.repositories.forEach(repo => {
+      let imgEl = document.createElement('img');
+      imgEl.setAttribute('src', repo.avatar_url);
+
+      let titleEl = document.createElement('strong');
+      titleEl.appendChild(document.createTextNode(repo.name))
+
+      let descriptionEl = document.createElement('p');
+      descriptionEl.appendChild(document.createTextNode('repo.description'));
+
+      let linkEl = document.createElement('a');
+      linkEl.setAttribute('target', '_blank'); // blank opens a new tab
+      linkEl.setAttribute('href', repo.html_url)
+      linkEl.appendChild(document.createTextNode('Access'));
+
+      let listItemEl = document.createElement('li');
+      listItemEl.appendChild(imgEl);
+      listItemEl.appendChild(titleEl);
+      listItemEl.appendChild(descriptionEl);
+      listItemEl.appendChild(linkEl);
+
+      this.listEl.appendChild(listItemEl);
+
+    })
   }
 }
-buscaUsuario('diego3g');
+
+new App();
